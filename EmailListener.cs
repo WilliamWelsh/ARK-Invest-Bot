@@ -50,8 +50,7 @@ namespace ARK_Invest_Bot
             // Set up a timer that will automatically check emails every 5 minutes
             var levelTimer = new System.Timers.Timer
             {
-                Interval = 10000,
-                //Interval = 300000,
+                Interval = 300000,
                 AutoReset = true,
                 Enabled = true
             };

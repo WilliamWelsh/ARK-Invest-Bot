@@ -18,7 +18,7 @@ A Discord bot that will send a message whenever ARK Invest sends out their daily
 #### Bugs and Issues
 Please report bugs or issues here on Github or on the Discord support server.  
 [Issues page](https://github.com/WilliamWelsh/ARK-Invest-Bot/issues)  
-[Support Server](https://discord.gg/gzhdfGC2as)
+[Support Server](https://discord.gg/gzhdfGC2as)  
 
 ## License
 [MIT](https://github.com/WilliamWelsh/ARK-Invest-Bot/blob/master/LICENSE)
