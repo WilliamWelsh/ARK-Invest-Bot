@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ARK-Invest-Bot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "discordToken": "BOT TOKEN HERE"
+      }
+    }
+  }
+}
