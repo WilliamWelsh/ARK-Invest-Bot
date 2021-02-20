@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -57,9 +58,31 @@ namespace ARK_Invest_Bot
             }
         }
 
+        [Alias("ark help")]
         [Command("ark")]
         public async Task PrintHelp()
         {
+            await Context.Channel.SendMessageAsync(null, false, new EmbedBuilder()
+                .WithColor(EmbedUtils.ARKColor)
+                .WithAuthor(new EmbedAuthorBuilder()
+                    .WithIconUrl(EmbedUtils.Logo)
+                    .WithName("ARK Commands"))
+                .WithFields(new List<EmbedFieldBuilder>
+                {
+                    new EmbedFieldBuilder()
+                        .WithName("Subscribe to notifications")
+                        .WithValue("!ark subscribe"),
+                    new EmbedFieldBuilder()
+                        .WithName("Unsubscribe from notifications")
+                        .WithValue("!ark unsubscribe"),
+                    new EmbedFieldBuilder()
+                        .WithName("Suggested Role Color")
+                        .WithValue("#8364ff"),
+                    new EmbedFieldBuilder()
+                        .WithName("Links")
+                        .WithValue("[Invite](https://discord.com/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot) | [GitHub](https://github.com/WilliamWelsh/ARK-Invest-Bot) | [Support Server](https://discord.com/invite/gzhdfGC2as)")
+                })
+                .Build());
         }
     }
 }
