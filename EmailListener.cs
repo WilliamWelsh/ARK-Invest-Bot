@@ -47,10 +47,10 @@ namespace ARK_Invest_Bot
                 ApplicationName = "ARK Invest Bot",
             });
 
-            // Set up a timer that will automatically check emails every 5 minutes
+            // Set up a timer that will automatically check emails every 2 minutes
             var levelTimer = new System.Timers.Timer
             {
-                Interval = 300000,
+                Interval = 120000,
                 AutoReset = true,
                 Enabled = true
             };
