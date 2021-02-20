@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,7 +45,17 @@ namespace ARK_Invest_Bot
             // Send it to everyone
             foreach (var guildChannel in guildChannels)
             {
-                await _client.GetGuild(guildChannel.GuildID).GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
+                try
+                {
+                    await _client.GetGuild(guildChannel.GuildID).GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
+                }
+                catch (HttpException e)
+                {
+                    if (e.HttpCode == HttpStatusCode.Forbidden)
+                    {
+                        // Oh well
+                    }
+                }
             }
 
             // Delete the local image
