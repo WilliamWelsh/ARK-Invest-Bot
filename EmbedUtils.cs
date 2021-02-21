@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -49,8 +46,8 @@ namespace ARK_Invest_Bot
                         .WithName("Unsubscribe a channel from notifications")
                         .WithValue("!ark unsubscribe"),
                     new EmbedFieldBuilder()
-                        .WithName("Suggested Role Color")
-                        .WithValue("#8364ff"),
+                        .WithName("Bot Information")
+                        .WithValue("!ark info"),
                     new EmbedFieldBuilder()
                         .WithName("Links")
                         .WithValue("[Invite](https://discord.com/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot) | [GitHub](https://github.com/WilliamWelsh/ARK-Invest-Bot) | [Support Server](https://discord.com/invite/gzhdfGC2as)")
