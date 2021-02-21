@@ -37,6 +37,13 @@ namespace ARK_Invest_Bot
             if (!(rawMessage is SocketUserMessage message)) return;
             if (message.Source != MessageSource.User) return;
 
+            // Print the help if someone tags the bot
+            if (message.Content.Contains(_discord.CurrentUser.Mention))
+            {
+                await message.Channel.PrintHelp();
+                return;
+            }
+
             // Check for command prefix
             var argPos = 0;
             if (!message.HasCharPrefix('!', ref argPos)) return;
