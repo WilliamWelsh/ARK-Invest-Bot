@@ -11,16 +11,18 @@ ARK Invest Discord Bot
 
 [<img src="https://discordapp.com/api/guilds/811822954089807892/widget.png?style=shield">](https://discord.gg/gzhdfGC2as)
 <img src="https://img.shields.io/badge/discord-csharp-blue.svg">
+[![MyGet](https://img.shields.io/myget/discord-net/vpre/Discord.Net.svg)](https://www.myget.org/feed/Packages/discord-net)
+[![ARK](https://img.shields.io/badge/ARK-Invest-blueviolet.svg)](https://ark-invest.com/)
 
 </div>
 
 ### Overview
 This Discord bot will automatically convert ARK's daily trade notifcation emails into a pretty image and send it to any Discord channel that has subscribed to it.  
 
-## Inviting to Your Server
-[Click here to invite the bot to your server.](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot)
+## Setting up
+[Click here to invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot). To start getting notifications, go to the channel you want the messages to arrive in and do `!ark subscribe`. You must be an administrator of the server.
 
-#### Commands
+### Commands
 `!ark` View available commands.  
 `!ark subscribe` Subscribes the current channel to receive ARK notifications. Only admins may run this command.  
 `!ark unsubscribe` Unsubscribes the current channel to receive ARK notifications. Only admins may run this command.  
