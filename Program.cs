@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,10 @@ namespace ARK_Invest_Bot
                 await client.SetGameAsync("!ark", null, ActivityType.Watching);
                 await client.StartAsync();
 
+                client.GuildAvailable += OnGuildAvailable;
+
+                client.LeftGuild += OnGuildLeft;
+
                 // Register commands
                 await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
 
@@ -36,13 +41,42 @@ namespace ARK_Invest_Bot
             }
         }
 
-        private Task LogAsync(LogMessage log)
+        // Remove a server from our Guild Channel data if someone removes us
+        private Task OnGuildLeft(SocketGuild guild)
         {
-            Console.WriteLine(log.ToString());
+            var data = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
+            var modifiedData = data.ToList();
+
+            if (modifiedData.Any(x => x.GuildID == guild.Id))
+            {
+                modifiedData.Remove(modifiedData.First(x => x.GuildID == guild.Id));
+
+                DataStorage.SaveGuildChannelData(modifiedData, GuildChannels.guildChannelsFile);
+                Console.WriteLine($"Left {guild.Name}. They were subsribed, so I removed them.");
+            }
+            else
+            {
+                Console.WriteLine($"Left {guild.Name}. They were not subscribed.");
+            }
 
             return Task.CompletedTask;
         }
 
+        // Send a message when we join a guild
+        private Task OnGuildAvailable(SocketGuild guild)
+        {
+            Console.WriteLine($"Connected to {guild.Name}");
+            return Task.CompletedTask;
+        }
+
+        // Log
+        private Task LogAsync(LogMessage log)
+        {
+            Console.WriteLine(log.ToString());
+            return Task.CompletedTask;
+        }
+
+        // Configure services
         private ServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
