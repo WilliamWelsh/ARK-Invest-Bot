@@ -23,7 +23,7 @@ namespace ARK_Invest_Bot
 
                 // Login
                 await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("arkInvestDiscordBotToken", EnvironmentVariableTarget.User));
-                await client.SetGameAsync("!ark", null, ActivityType.Watching);
+                await client.SetGameAsync("!ark help", null, ActivityType.Watching);
                 await client.StartAsync();
 
                 client.GuildAvailable += OnGuildAvailable;

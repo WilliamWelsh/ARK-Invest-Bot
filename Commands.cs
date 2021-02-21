@@ -89,8 +89,11 @@ namespace ARK_Invest_Bot
                 .WithFields(new List<EmbedFieldBuilder>
                 {
                     new EmbedFieldBuilder()
+                        .WithName("Commands")
+                        .WithValue("!ark help"),
+                    new EmbedFieldBuilder()
                         .WithName("Library")
-                        .WithValue("Discord.Net"),
+                        .WithValue("Discord.Net v2.3.0-dev-20210121.1 (API v6)"),
                     new EmbedFieldBuilder()
                         .WithName("Servers")
                         .WithValue(Context.Client.Guilds.Count),

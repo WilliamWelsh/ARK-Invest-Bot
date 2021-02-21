@@ -7,7 +7,10 @@ namespace ARK_Invest_Bot
 {
     public static class EmbedUtils
     {
+        // ARK Invest Logo (Bot's profile picture)
         public static string Logo = "https://cdn.discordapp.com/avatars/811803089853874226/f09d3ba474b1956ee3768d9ff5b6a564.png?size=64";
+
+        // ARK's Purple-ish Color
         public static Color ARKColor = new Color(131, 100, 255);
 
         // Print a success message

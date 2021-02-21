@@ -37,6 +37,7 @@ namespace ARK_Invest_Bot
             // FUND | DATE | TRADE DIRECTION | TICKER | # SHARES | % OF ETF
             var columns = 6;
 
+            // Add 1 to trades.count for the top header row
             using (var image = new Image<Rgba32>(80 * columns, (trades.Count + 1) * 25, new Rgba32(10, 10, 35)))
             {
                 // Headers
