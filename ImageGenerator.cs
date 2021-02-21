@@ -21,6 +21,17 @@ namespace ARK_Invest_Bot
         // Renderer Options for the Font
         private static RendererOptions rendererOptions = new RendererOptions(Font);
 
+        // Measure string size
+        private static FontRectangle Measure(string text) => TextMeasurer.Measure(text, rendererOptions);
+
+        // Draw text onto the result
+        private static void DrawData(this Image<Rgba32> image, string text, float x, float row)
+        {
+            var size = Measure(text);
+            image.Mutate(i => i.DrawText(text, Font, Color.White, new PointF(x - size.Width / 2, 10 + row * 25 - size.Height / 2)));
+        }
+
+        // Convert a list of trade objects into a pretty image
         public static void MakeImage(List<Trade> trades)
         {
             // FUND | DATE | TRADE DIRECTION | TICKER | # SHARES | % OF ETF
@@ -66,16 +77,6 @@ namespace ARK_Invest_Bot
                 // Save the image
                 image.Save("ark.png");
             }
-        }
-
-        // Measure string size
-        private static FontRectangle Measure(string text) => TextMeasurer.Measure(text, rendererOptions);
-
-        // Draw text onto the result
-        private static void DrawData(this Image<Rgba32> image, string text, float x, float row)
-        {
-            var size = Measure(text);
-            image.Mutate(i => i.DrawText(text, Font, Color.White, new PointF(x - size.Width / 2, 10 + row * 25 - size.Height / 2)));
         }
     }
 }

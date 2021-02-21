@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ARK_Invest_Bot
 {
+    /// <summary>
+    /// Listen and process emails, and print them to Discord
+    /// </summary>
     public class ARKHandler
     {
         private DiscordSocketClient _client;
@@ -47,7 +50,9 @@ namespace ARK_Invest_Bot
             {
                 try
                 {
-                    await _client.GetGuild(guildChannel.GuildID).GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
+                    var guild = _client.GetGuild(guildChannel.GuildID);
+                    await guild.GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
+                    Console.WriteLine($"Successfully posted to {guild.Name}");
                 }
                 catch (HttpException e)
                 {
@@ -62,7 +67,8 @@ namespace ARK_Invest_Bot
             File.Delete("ark.png");
         }
 
-        public List<Trade> ReadTrades(string email)
+        // Convert ARK's email into a list of trade objects
+        public static List<Trade> ReadTrades(string email)
         {
             // Scrape the email
             var trades = new List<Trade>();
