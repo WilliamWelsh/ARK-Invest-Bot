@@ -21,7 +21,7 @@ namespace ARK_Invest_Bot
                 client.Log += LogAsync;
 
                 // Login
-                await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("discordToken"));
+                await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("arkInvestDiscordBotToken", EnvironmentVariableTarget.User));
                 await client.SetGameAsync("!ark", null, ActivityType.Watching);
                 await client.StartAsync();
 
