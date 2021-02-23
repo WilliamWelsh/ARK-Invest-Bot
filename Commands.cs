@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -105,5 +106,44 @@ namespace ARK_Invest_Bot
                         .WithValue("[Invite](https://discord.com/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot) | [GitHub](https://github.com/WilliamWelsh/ARK-Invest-Bot) | [Support Server](https://discord.com/invite/gzhdfGC2as)")
                 })
                 .Build());
+
+        [Command("ark announce")]
+        public async Task Announce([Remainder] string message)
+        {
+            // This is ONLY FOR ME!! In case I want to announce something
+            // Maybe ARK resent their email and messed something up, or a new feature
+            if (Context.User.Id != 354458973572956160)
+                return;
+
+            // Get the guild channel data and start sending this to everyone
+            var guildChannels = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
+
+            // Create the embed
+            var embed = new EmbedBuilder()
+                .WithColor(EmbedUtils.ARKColor)
+                .WithAuthor(new EmbedAuthorBuilder()
+                    .WithName("Announcement")
+                    .WithIconUrl(EmbedUtils.Logo))
+                .WithDescription(message)
+                .Build();
+
+            // Send it to everyone
+            foreach (var guildChannel in guildChannels)
+            {
+                try
+                {
+                    var guild = Context.Client.GetGuild(guildChannel.GuildID);
+                    await guild.GetTextChannel(guildChannel.ChannelID).SendMessageAsync(null, false, embed);
+                    Console.WriteLine($"Successfully posted to {guild.Name}");
+                }
+                catch (HttpException e)
+                {
+                    if (e.HttpCode == HttpStatusCode.Forbidden)
+                    {
+                        // Oh well
+                    }
+                }
+            }
+        }
     }
 }
