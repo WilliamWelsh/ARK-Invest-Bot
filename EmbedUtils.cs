@@ -53,7 +53,7 @@ namespace ARK_Invest_Bot
                         .WithValue("!ark info"),
                     new EmbedFieldBuilder()
                         .WithName("Links")
-                        .WithValue("[Invite](https://discord.com/oauth2/authorize?client_id=811803089853874226&permissions=68608&scope=bot) | [GitHub](https://github.com/WilliamWelsh/ARK-Invest-Bot) | [Support Server](https://discord.com/invite/gzhdfGC2as)")
+                        .WithValue("[Invite](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=117760&scope=bot) | [GitHub](https://github.com/WilliamWelsh/ARK-Invest-Bot) | [Support Server](https://discord.com/invite/gzhdfGC2as)")
                 })
                 .Build());
     }
