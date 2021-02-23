@@ -36,7 +36,7 @@ namespace ARK_Invest_Bot
             catch (HttpException e)
             {
                 if (e.HttpCode == HttpStatusCode.Forbidden)
-                    await Context.User.SendMessageAsync("I don't have permissions to send messages in that channel. Please give me that permission. If you need more support, join the support server here: https://discord.com/invite/gzhdfGC2as");
+                    await Context.User.PrintNoPermissionsMessage();
             }
         }
 
@@ -72,7 +72,7 @@ namespace ARK_Invest_Bot
             catch (HttpException e)
             {
                 if (e.HttpCode == HttpStatusCode.Forbidden)
-                    await Context.User.SendMessageAsync("I don't have permissions to send messages in that channel. Please give me that permission. If you need more support, join the support server here: https://discord.com/invite/gzhdfGC2as");
+                    await Context.User.PrintNoPermissionsMessage();
             }
         }
 
