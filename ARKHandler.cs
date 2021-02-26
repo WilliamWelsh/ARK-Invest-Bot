@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
@@ -17,6 +18,8 @@ namespace ARK_Invest_Bot
     {
         private DiscordSocketClient _client;
 
+        private HttpClient _http;
+
         public ARKHandler(IServiceProvider services)
         {
             // Initialize the email listener
@@ -24,6 +27,9 @@ namespace ARK_Invest_Bot
 
             // Get a connection to our client
             _client = services.GetRequiredService<DiscordSocketClient>();
+
+            // Initialize HTTP Client
+            _http = new HttpClient();
         }
 
         // Process the email and send it to everyone
@@ -31,9 +37,6 @@ namespace ARK_Invest_Bot
         {
             // Create the image
             ImageGenerator.MakeImage(ReadTrades(email));
-
-            // Get the guild channel data and start sending this to everyone
-            var guildChannels = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
 
             // Create the embed
             var embed = new EmbedBuilder()
@@ -46,13 +49,18 @@ namespace ARK_Invest_Bot
                 .Build();
 
             // Send it to everyone
-            foreach (var guildChannel in guildChannels)
+            foreach (var guildChannel in DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile))
             {
                 try
                 {
                     var guild = _client.GetGuild(guildChannel.GuildID);
-                    await guild.GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
-                    Console.WriteLine($"Successfully posted to {guild.Name}");
+                    var channel = guild.GetTextChannel(guildChannel.ChannelID);
+
+                    if (guild != null && channel != null)
+                    {
+                        await guild.GetTextChannel(guildChannel.ChannelID).SendFileAsync("ark.png", null, embed: embed);
+                        Console.WriteLine($"Successfully posted to {guild.Name}");
+                    }
                 }
                 catch (HttpException e)
                 {
@@ -107,6 +115,19 @@ namespace ARK_Invest_Bot
             } while (email.Contains("<td>"));
 
             return trades;
+        }
+
+        // Search for a ticker in ARK's holdings
+        public async Task SearchForTicker(ISocketMessageChannel channel, string ticker)
+        {
+            var result = "";
+            using (var response = await _http.GetAsync($"https://cathiesark.com/arkk-holdings-of-{ticker}"))
+                result = await response.Content.ReadAsStringAsync();
+
+            result = result.CutBeforeAndAfter("<meta property=\"og:image\" content=\"", "\"/>")
+                .Replace("&amp;", "&");
+
+            await channel.SendMessageAsync(result);
         }
     }
 }
