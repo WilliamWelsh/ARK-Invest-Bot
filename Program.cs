@@ -22,7 +22,7 @@ namespace ARK_Invest_Bot
                 client.Log += LogAsync;
 
                 // Login
-                await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("arkInvestDiscordBotToken", EnvironmentVariableTarget.User));
+                await client.LoginAsync(TokenType.Bot, Config.DiscordBotToken);
                 await client.SetGameAsync("!ark help", null, ActivityType.Watching);
                 await client.StartAsync();
 
@@ -44,14 +44,14 @@ namespace ARK_Invest_Bot
         // Remove a server from our Guild Channel data if someone removes us
         private Task OnGuildLeft(SocketGuild guild)
         {
-            var data = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
+            var data = DataStorage.LoadGuildChannelData(Config.GuildChannelsFile);
             var modifiedData = data.ToList();
 
             if (modifiedData.Any(x => x.GuildID == guild.Id))
             {
                 modifiedData.Remove(modifiedData.First(x => x.GuildID == guild.Id));
 
-                DataStorage.SaveGuildChannelData(modifiedData, GuildChannels.guildChannelsFile);
+                DataStorage.SaveGuildChannelData(modifiedData, Config.GuildChannelsFile);
                 Console.WriteLine($"Left {guild.Name}. They were subsribed, so I removed them.");
             }
             else

@@ -8,6 +8,8 @@ using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Tweetinvi;
+using Tweetinvi.Parameters;
 
 namespace ARK_Invest_Bot
 {
@@ -20,6 +22,8 @@ namespace ARK_Invest_Bot
 
         private HttpClient _http;
 
+        private TwitterClient _twitterClient;
+
         public ARKHandler(IServiceProvider services)
         {
             // Initialize the email listener
@@ -30,26 +34,46 @@ namespace ARK_Invest_Bot
 
             // Initialize HTTP Client
             _http = new HttpClient();
+
+            // Initialize Twitter Client
+            _twitterClient = new TwitterClient(Config.TwitterConsumerKey, Config.TwitterConsumerSecret, Config.TwitterAccessToken, Config.TwitterAccessTokenSecret);
         }
 
         // Process the email and send it to everyone
         public async Task ProcessTrades(string email)
         {
-            // Create the image
-            ImageGenerator.MakeImage(ReadTrades(email));
+            // Convert the email into a list of trade objects
+            var trades = ReadTrades(email);
 
+            // Create the image
+            ImageGenerator.MakeImage(trades);
+
+            // Send it to Twitter
+            var tickers = "";
+            foreach (var trade in trades)
+                if (!tickers.Contains($"${trade.Ticker}"))
+                    tickers += $"${trade.Ticker} ";
+
+            var uploadedImage = await _twitterClient.Upload.UploadTweetImageAsync(File.ReadAllBytes("ark.png"));
+            var tweetText = $"(Click to enlarge)\nARK's Trading Information for {DateTime.Now:MM/dd}\n\n{tickers}";
+            await _twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(tweetText.Length <= 280 ? tweetText : $"(Click to enlarge)\nARK's Trading Information for {DateTime.Now:MM/dd}")
+            {
+                Medias = { uploadedImage }
+            });
+
+            // Send it to Discord
             // Create the embed
             var embed = new EmbedBuilder()
                 .WithColor(EmbedUtils.ARKColor)
                 .WithAuthor(new EmbedAuthorBuilder()
-                    .WithName($"ARK Trading Information for {DateTime.Now:MM/dd}")
+                    .WithName($"ARK's Trading Information for {DateTime.Now:MM/dd}")
                     .WithIconUrl(EmbedUtils.Logo))
                 .WithImageUrl("attachment://ark.png")
                 .WithFooter("Via ARK Trade Notifications")
                 .Build();
 
             // Send it to everyone
-            foreach (var guildChannel in DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile))
+            foreach (var guildChannel in DataStorage.LoadGuildChannelData(Config.GuildChannelsFile))
             {
                 try
                 {

@@ -7,13 +7,11 @@ namespace ARK_Invest_Bot
     {
         private static List<GuildChannel> guildChannelData;
 
-        public static string guildChannelsFile = "Resources/guild_channel_data.json";
-
         // Initializer
         static GuildChannels()
         {
-            if (DataStorage.SaveExists(guildChannelsFile))
-                guildChannelData = DataStorage.LoadGuildChannelData(guildChannelsFile).ToList();
+            if (DataStorage.SaveExists(Config.GuildChannelsFile))
+                guildChannelData = DataStorage.LoadGuildChannelData(Config.GuildChannelsFile).ToList();
             else
             {
                 guildChannelData = new List<GuildChannel>();
@@ -21,13 +19,13 @@ namespace ARK_Invest_Bot
             }
         }
 
-        public static void SaveGuildChannelData() => DataStorage.SaveGuildChannelData(guildChannelData, guildChannelsFile);
+        public static void SaveGuildChannelData() => DataStorage.SaveGuildChannelData(guildChannelData, Config.GuildChannelsFile);
 
         public static GuildChannel GetGuildChannelData(ulong guildID, ulong channelID) => GetOrCreateGuildChannelData(guildID, channelID);
 
         private static GuildChannel GetOrCreateGuildChannelData(ulong guildID, ulong channelID)
         {
-            guildChannelData = DataStorage.LoadGuildChannelData(guildChannelsFile).ToList();
+            guildChannelData = DataStorage.LoadGuildChannelData(Config.GuildChannelsFile).ToList();
             var result = from a in guildChannelData
                          where a.GuildID == guildID
                          select a;

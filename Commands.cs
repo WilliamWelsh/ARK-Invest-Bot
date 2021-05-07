@@ -12,9 +12,12 @@ namespace ARK_Invest_Bot
 {
     public class Commands : ModuleBase<SocketCommandContext>
     {
+        // Dependency Injection will fill this value in for us
+        public ARKHandler ARKHandler { get; set; }
+
         [Alias("ark ping")]
         [Command("ping")]
-        public Task PingAsync() => ReplyAsync("Pong!");
+        public async Task PingAsync() => await Context.Message.ReplyAsync("Pong!");
 
         [Command("ark subscribe")]
         public async Task Subscribe()
@@ -48,14 +51,14 @@ namespace ARK_Invest_Bot
                 var user = (SocketGuildUser)Context.User;
                 if (user.GuildPermissions.Administrator)
                 {
-                    var data = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
+                    var data = DataStorage.LoadGuildChannelData(Config.GuildChannelsFile);
                     var modifiedData = data.ToList();
 
                     if (modifiedData.Any(x => x.GuildID == Context.Guild.Id))
                     {
                         modifiedData.Remove(modifiedData.First(x => x.GuildID == Context.Guild.Id));
 
-                        DataStorage.SaveGuildChannelData(modifiedData, GuildChannels.guildChannelsFile);
+                        DataStorage.SaveGuildChannelData(modifiedData, Config.GuildChannelsFile);
                         await Context.Channel.PrintSuccess(
                             $"This server is no longer subscribed to ARK notifications. You can subscribe again by doing `!ark subscribe`");
                     }
@@ -116,7 +119,7 @@ namespace ARK_Invest_Bot
                 return;
 
             // Get the guild channel data and start sending this to everyone
-            var guildChannels = DataStorage.LoadGuildChannelData(GuildChannels.guildChannelsFile);
+            var guildChannels = DataStorage.LoadGuildChannelData(Config.GuildChannelsFile);
 
             // Create the embed
             var embed = new EmbedBuilder()
