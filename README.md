@@ -5,10 +5,11 @@
 ARK Invest Discord Bot
 </h1>
 
-<h4 align="center">Automatically send ARK trade notifications to your Discord server.</h4>
+<h4 align="center">Automatically send formatted ARK trade notifications to Twitter and your Discord server.</h4>
 
 <div align="center">
 
+[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/ARKInvestTrades.svg?style=social&label=Follow%20%40ARKInvestTrades)](https://twitter.com/ARKInvestTrades)
 [<img src="https://discordapp.com/api/guilds/811822954089807892/widget.png?style=shield">](https://discord.gg/gzhdfGC2as)
 <img src="https://img.shields.io/badge/discord-csharp-blue.svg">
 [![MyGet](https://img.shields.io/myget/discord-net/vpre/Discord.Net.svg)](https://www.myget.org/feed/Packages/discord-net)
@@ -19,8 +20,8 @@ ARK Invest Discord Bot
 ### Overview
 This Discord bot will automatically convert ARK's daily trade notifcation emails into a pretty image and send it to any Discord channel that has subscribed to it.  
 
-## Setting up
-[Click here to invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=117760&scope=bot). To start getting notifications, go to the channel you want the messages to arrive in and do `!ark subscribe`. You must be an administrator of the server.
+## Getting Notifications
+[Click here to follow on Twitter, and turn notifcations on](https://twitter.com/ARKInvestTrades), and [Click here to invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=117760&scope=bot). To start getting notifications, go to the channel you want the messages to arrive in and do `!ark subscribe`. You must be an administrator of the server.
 
 ### Commands
 `!ark` View available commands.  
