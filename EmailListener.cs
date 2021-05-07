@@ -71,7 +71,7 @@ namespace ARK_Invest_Bot
         // Read ARK email
         public async Task CheckForArkEmail()
         {
-            Console.WriteLine("Checking email...");
+            Console.WriteLine($"[{DateTime.Now:H:mm:ss}] Checking email...");
 
             // Define parameters of request.
             var request = GmailService.Users.Messages.List("me");
