@@ -23,8 +23,9 @@ This Discord bot will automatically convert ARK's daily trade notifcation emails
 ## Getting Notifications
 [Click here to follow on Twitter, and turn notifcations on](https://twitter.com/ARKInvestTrades), and [Click here to invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=811803089853874226&permissions=117760&scope=bot). To start getting notifications, go to the channel you want the messages to arrive in and do `!ark subscribe`. You must be an administrator of the server.
 
-### Commands
+### Discord Commands
 `!ark` View available commands.  
+`!ark info` View information about the bot.  
 `!ark subscribe` Subscribes the current channel to receive ARK notifications. Only admins may run this command.  
 `!ark unsubscribe` Unsubscribes the current channel to receive ARK notifications. Only admins may run this command.  
 
