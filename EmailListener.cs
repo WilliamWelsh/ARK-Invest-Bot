@@ -97,8 +97,11 @@ namespace ARK_Invest_Bot
             // Trash the message
             GmailService.Users.Messages.Trash("me", messages.ElementAt(0).Id).Execute();
 
+            // Save the body as an html file
+            File.WriteAllText("result.html", result);
+
             // Process the email's body and send it to everyone
-            await _arkHandler.ProcessTrades(result);
+            await _arkHandler.ProcessTrades();
         }
     }
 }

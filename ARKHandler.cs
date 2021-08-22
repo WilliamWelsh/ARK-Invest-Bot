@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -7,7 +8,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
+using Google.Apis.Gmail.v1.Data;
 using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 using Tweetinvi;
 using Tweetinvi.Parameters;
 
@@ -24,11 +28,10 @@ namespace ARK_Invest_Bot
 
         private TwitterClient _twitterClient;
 
+        private FirefoxDriver _driver;
+
         public ARKHandler(IServiceProvider services)
         {
-            // Initialize the email listener
-            _ = new EmailListener(this);
-
             // Get a connection to our client
             _client = services.GetRequiredService<DiscordSocketClient>();
 
@@ -37,25 +40,29 @@ namespace ARK_Invest_Bot
 
             // Initialize Twitter Client
             _twitterClient = new TwitterClient(Config.TwitterConsumerKey, Config.TwitterConsumerSecret, Config.TwitterAccessToken, Config.TwitterAccessTokenSecret);
+
+            // Initialize the web driver
+            var options = new FirefoxOptions();
+            options.AddArgument("--headless");
+            _driver = new FirefoxDriver(options);
+            _driver.Manage().Window.Size = new Size(825, 2500);
+
+            // Initialize the email listener
+            _ = new EmailListener(this);
         }
 
         // Process the email and send it to everyone
-        public async Task ProcessTrades(string email)
+        public async Task ProcessTrades()
         {
-            // Convert the email into a list of trade objects
-            var trades = ReadTrades(email);
-
-            // Create the image
-            ImageGenerator.MakeImage(trades);
+            // Take a screenshot of the email
+            _driver.Navigate().GoToUrl("file:///C:/Users/Administrator/Desktop/ARK Bot/result.html");
+            System.Threading.Thread.Sleep(10000);
+            var ss = ((ITakesScreenshot)_driver).GetScreenshot();
+            ss.SaveAsFile("ark.png");
 
             // Send it to Twitter
-            var tickers = "";
-            foreach (var trade in trades)
-                if (!tickers.Contains($"${trade.Ticker}"))
-                    tickers += $"${trade.Ticker} ";
-
             var uploadedImage = await _twitterClient.Upload.UploadTweetImageAsync(File.ReadAllBytes("ark.png"));
-            var tweetText = $"(Click to enlarge)\nARK's Trading Information for {DateTime.Now:MM/dd}\n\n{tickers}";
+            var tweetText = "(Click to enlarge)\nARK's Trading Information for Today";
             await _twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(tweetText.Length <= 280 ? tweetText : $"(Click to enlarge)\nARK's Trading Information for {DateTime.Now:MM/dd}")
             {
                 Medias = { uploadedImage }
@@ -66,7 +73,7 @@ namespace ARK_Invest_Bot
             var embed = new EmbedBuilder()
                 .WithColor(EmbedUtils.ARKColor)
                 .WithAuthor(new EmbedAuthorBuilder()
-                    .WithName($"ARK's Trading Information for {DateTime.Now:MM/dd}")
+                    .WithName($"ARK's Trading Information for Today")
                     .WithIconUrl(EmbedUtils.Logo))
                 .WithImageUrl("attachment://ark.png")
                 .WithFooter("Via ARK Trade Notifications")
@@ -95,50 +102,9 @@ namespace ARK_Invest_Bot
                 }
             }
 
-            // Delete the local image
+            // Cleanup
             File.Delete("ark.png");
-        }
-
-        // Convert ARK's email into a list of trade objects
-        public static List<Trade> ReadTrades(string email)
-        {
-            // Scrape the email
-            var trades = new List<Trade>();
-
-            var date = DateTime.Now.ToString("MM/dd");
-
-            email = email.CutBeforeAndAfter("</tr>", "</table>");
-
-            do
-            {
-                email = email.CutBefore("<td>").CutBefore("<td>");
-
-                var fundName = email.CutAfter("</td>");
-
-                email = email.CutBefore("<td>").CutBefore("<td>");
-                var direction = email.CutAfter("</td>");
-
-                email = email.CutBefore("<td>");
-                var ticker = email.CutAfter("</td>");
-
-                email = email.CutBefore("<td>").CutBefore("<td>").CutBefore("align='right'>");
-                var shares = email.CutAfter("</td>");
-
-                email = email.CutBefore("align='right'>");
-                var percentOfEtf = email.CutAfter("</td>");
-
-                trades.Add(new Trade
-                {
-                    Fund = fundName,
-                    Date = date,
-                    Direction = direction,
-                    Ticker = ticker,
-                    Shares = shares,
-                    PercentOfEtf = percentOfEtf
-                });
-            } while (email.Contains("<td>"));
-
-            return trades;
+            File.Delete("result.html");
         }
 
         // Search for a ticker in ARK's holdings
